@@ -1,0 +1,20 @@
+{
+  "name": "@randock/complipay-api-client",
+  "version": "0.0.1",
+  "description": "Complipay API Client",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "yarn build",
+    "generate-client": "generate-graphql-client -e http://localhost:3001/graphql -o ./src/client"
+  },
+  "author": "Randock Web Development",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "graphql-typed-client": "^1.7.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}

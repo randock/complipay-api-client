@@ -1,0 +1,192 @@
+"""
+Exposes a URL that specifies the behaviour of this scalar.
+"""
+directive @specifiedBy(
+  """
+  The URL that specifies the behaviour of this scalar.
+  """
+  url: String!
+) on SCALAR
+
+input CreatePaymentInput {
+  transaction: TransactionDto!
+  customer: CustomerDto!
+
+  """
+  The payment method you would like to use. If omitted, a payment selector screen will be shown.
+  """
+  method: PaymentMethod = null
+
+  """
+  Additional data for the payment method chosen (for example, issuer bank).
+  """
+  methodData: JSONObject = null
+
+  """
+  The payment gateway you would like to use. If omitted, the default gateway as configured in your account will be used.
+  """
+  gateway: PaymentGateway = null
+
+  """
+  A unique payment reference for your system.
+  """
+  reference: String = null
+
+  """
+  The URL we will call with status updates for the payment.
+  """
+  webhookUrl: String = null
+
+  """
+  The url we will redirect the customer to after successful/failed payment.
+  """
+  redirectUrl: String = null
+}
+
+type CreatePaymentResponse {
+  uuid: String!
+  redirectUrl: String!
+}
+
+input CustomerDto {
+  """
+  IETF language tags (rfc5646). E.g. nl-NL, nl, en-GB et cetera.
+  """
+  locale: String!
+
+  """
+  Tax indicators already known within your application.
+  """
+  taxIndicators: JSONObject = null
+}
+
+type FieldEnumResponse {
+  value: String!
+  label: String!
+  fields: [FieldResponse!]
+}
+
+type FieldResponse {
+  identifier: String!
+  type: FieldType!
+  name: String!
+  enum: [FieldEnumResponse!]!
+  description: String!
+}
+
+"""
+A list of possible field types for tax indicators
+"""
+enum FieldType {
+  ENUM
+}
+
+input GetPaymentInput {
+  uuid: String!
+}
+
+type GetPaymentResponse {
+  payment: PaymentResponse!
+}
+
+input InitializePaymentInput {
+  customer: CustomerDto!
+  transaction: TransactionDto!
+}
+
+type InitializePaymentResponse {
+  methods: [PaymentMethodResponse!]!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+input MoneyInput {
+  """
+  The amount of the monetary value represented as an integer (in cents). E.g. € 5,25 should be passed as 525.
+  """
+  amount: Int!
+
+  """
+  The ISO 4217 currency code for this monetary value.
+  """
+  currencyCode: String!
+}
+
+type Mutation {
+  initializePayment(input: InitializePaymentInput!): InitializePaymentResponse!
+  createPayment(input: CreatePaymentInput!): CreatePaymentResponse!
+}
+
+"""
+A list of supported gateway providers
+"""
+enum PaymentGateway {
+  MOLLIE
+  MULTISAFEPAY
+  PAYPAL
+  STRIPE
+  ADYEN
+}
+
+"""
+A list of supported payment methods
+"""
+enum PaymentMethod {
+  IDEAL
+  CREDITCARD
+  PAYPAL
+  BANCONTACT
+}
+
+type PaymentMethodIssuerResponse {
+  id: String!
+  title: String!
+}
+
+type PaymentMethodResponse {
+  method: PaymentMethod!
+  title: String!
+  gateway: PaymentGateway!
+
+  """
+  The issuers are used for certain payment methods (for example iDEAL) to specify the bank chosen by the customer.
+  """
+  issuers: [PaymentMethodIssuerResponse!]!
+
+  """
+  Fields that are required for tax compliance. You can either present your
+  customer with these fields in the checkout, or let us handle it when you
+  redirect the user.
+  """
+  fields: [FieldResponse!]!
+}
+
+type PaymentResponse {
+  uuid: String!
+  status: PaymentStatus!
+}
+
+"""
+A list of supported payment methods
+"""
+enum PaymentStatus {
+  OPEN
+  CANCELED
+  PENDING
+  AUTHORIZED
+  EXPIRED
+  FAILED
+  PAID
+}
+
+type Query {
+  getPayment(input: GetPaymentInput!): GetPaymentResponse!
+}
+
+input TransactionDto {
+  price: MoneyInput!
+  description: String = null
+}
