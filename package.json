@@ -1,9 +1,9 @@
 {
   "name": "@randock/complipay-api-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Complipay API Client",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/createClient.js",
+  "types": "dist/createClient.d.ts",
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
