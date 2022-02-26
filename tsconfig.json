@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "incremental": true,
-    "allowJs": true,
-    "resolveJsonModule": true
+    "esModuleInterop": true,
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "files": [
+    "index.ts"
+  ],
 }
